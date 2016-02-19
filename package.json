@@ -1,7 +1,7 @@
 {
   "name": "react-cropview",
   "version": "0.0.0",
-  "description": "A tooltip React component for Redux",
+  "description": "A React component providing a cropped view for large contents and making it draggable.",
   "main": "./lib/index.js",
   "repository": {
     "type": "git",
