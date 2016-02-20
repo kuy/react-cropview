@@ -9,7 +9,7 @@ class App extends Component {
         <h1>react-cropview</h1>
 
         <CropView width={400} height={200}>
-          <img src="http://placehold.it/600x400" alt="placeholder" />
+          <img src="/placeholder.png" alt="placeholder" />
         </CropView>
       </div>
     );

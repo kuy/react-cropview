@@ -1,5 +1,6 @@
 import CropView from './cropview';
-import Layer from './layer';
+import Content from './content';
+import Preview from './preview';
 
 export default CropView;
-export { Layer };
+export { Content, Preview };

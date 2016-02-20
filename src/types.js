@@ -1,1 +1,1 @@
-export const LAYER = 'layer';
+export const CONTENT = 'content';
