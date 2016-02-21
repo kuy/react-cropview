@@ -4,12 +4,12 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import Content from './content';
 import Preview from './preview';
 import { CONTENT } from './types';
+import { amend } from './utils';
 
 const boxTarget = {
   drop(props, monitor, component) {
-    const { x: dx, y: dy } = monitor.getDifferenceFromInitialOffset();
-    const { x, y } = component.state.offset;
-    component.setState({ offset: { x: x + dx, y: y + dy } });
+    const CropViewClass = CropView.DecoratedComponent.DecoratedComponent;
+    CropViewClass.prototype.updateOffset.call(component, monitor.getDifferenceFromInitialOffset());
   }
 };
 
@@ -28,8 +28,12 @@ export default class CropView extends Component {
       PropTypes.number,
       PropTypes.string,
     ]),
+    constraint: PropTypes.bool,
     children: PropTypes.any.isRequired,
     connectDropTarget: PropTypes.func.isRequired,
+  };
+  static defaultProps = {
+    constraint: true,
   };
 
   constructor(props) {
@@ -46,11 +50,20 @@ export default class CropView extends Component {
   }
 
   handleEndDrag() {
-    if (this.preview) {
+    this.updateOffset();
+  }
+
+  updateOffset(diff = null) {
+    if (this.preview && this.preview.size) {
+      const { width, height } = this.props;
       const { x, y } = this.state.offset;
-      const { x: dx, y: dy } = this.preview.props.diff;
+      if (diff === null) {
+        diff = this.preview.props.diff;
+      }
+      const { x: dx, y: dy } = diff;
+      const offset = { x: x + dx, y: y + dy };
       this.setState({
-        offset: { x: x + dx, y: y + dy }
+        offset: amend(offset, { width, height }, this.preview.size)
       });
     }
   }
@@ -63,11 +76,15 @@ export default class CropView extends Component {
       width: `${width}px`,
       height: `${height}px`,
       overflow: 'hidden',
+      cursor: 'all-scroll',
     };
+
+    // TODO: Make sure 'children' has a single element.
+
     return connectDropTarget(
       <div>
         <div style={style}>
-          <Preview ref={::this.savePreview} base={offset}>
+          <Preview ref={::this.savePreview} base={offset} crop={{ width, height }}>
             {this.props.children}
           </Preview>
           <Content offset={offset} onEndDrag={::this.handleEndDrag}>
