@@ -24,6 +24,7 @@ const boxTarget = {
 export default class CropView extends Component {
   static displayName = 'CropView';
   static propTypes = {
+    name: PropTypes.string,
     width: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string,
@@ -33,16 +34,17 @@ export default class CropView extends Component {
       PropTypes.string,
     ]),
     constraint: PropTypes.bool,
+    centering: PropTypes.bool,
     measureOn: PropTypes.oneOfType([
       PropTypes.oneOf(['hover', 'mount']),
       PropTypes.object, // EventEmitter2
     ]),
     children: PropTypes.any.isRequired,
-    name: PropTypes.string,
     connectDropTarget: PropTypes.func.isRequired,
   };
   static defaultProps = {
     constraint: true,
+    centering: true,
     measureOn: 'mount',
   };
 
@@ -117,15 +119,20 @@ export default class CropView extends Component {
   updateSize() {
     if (this.refs.inner) {
       const size = getSize(this.refs.inner);
-      this.setState({
-        ...this.state,
-        size
-      });
+      const { width, height, centering } = this.props;
+      const offset = { ...this.state.offset };
+      if (centering && width < size.width) {
+        offset.x = (width - size.width) / 2;
+      }
+      if (centering && height < size.height) {
+        offset.y = (height - size.height) / 2;
+      }
+      this.setState({ offset, size });
     }
   }
 
   render() {
-    const { connectDropTarget, width, height, name } = this.props;
+    const { connectDropTarget, width, height, name, centering } = this.props;
     const { offset, size } = this.state;
     const style = {
       position: 'relative',
