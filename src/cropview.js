@@ -6,6 +6,10 @@ import Preview from './preview';
 import { CONTENT } from './types';
 import { amend, getSize } from './utils';
 
+function maybeEventEmitter(o) {
+  return typeof o === 'object' && o.on && o.removeListener;
+}
+
 const boxTarget = {
   drop(props, monitor, component) {
     const CropViewClass = CropView.DecoratedComponent.DecoratedComponent;
@@ -29,11 +33,17 @@ export default class CropView extends Component {
       PropTypes.string,
     ]),
     constraint: PropTypes.bool,
+    measureOn: PropTypes.oneOfType([
+      PropTypes.oneOf(['hover', 'mount']),
+      PropTypes.object, // EventEmitter2
+    ]),
     children: PropTypes.any.isRequired,
+    name: PropTypes.string,
     connectDropTarget: PropTypes.func.isRequired,
   };
   static defaultProps = {
     constraint: true,
+    measureOn: 'mount',
   };
 
   constructor(props) {
@@ -42,6 +52,21 @@ export default class CropView extends Component {
       offset: { x: 0, y: 0 },
       size: null,
     };
+
+    this.handleEmitter = this.handleEmitter.bind(this);
+
+    const { name, measureOn } = props;
+    if (maybeEventEmitter(measureOn)) {
+      if (typeof name !== 'string') {
+        console.error("'name' prop is required if you pass EventEmitter2 as 'measureOn' prop");
+        throw new Error('name is required');
+      }
+      measureOn.on(`${name}.update`, this.handleEmitter);
+    }
+  }
+
+  handleEmitter() {
+    this.updateSize();
   }
 
   savePreview(ref) {
@@ -70,8 +95,23 @@ export default class CropView extends Component {
     }
   }
 
+  componentDidMount() {
+    if (this.props.measureOn === 'mount') {
+      this.updateSize();
+    }
+  }
+
+  componentWillUnmount() {
+    const { measureOn } = this.props;
+    if (maybeEventEmitter(measureOn)) {
+      measureOn.removeListener(`${name}.update`, this.handleEmitter);
+    }
+  }
+
   handleMouseEnter() {
-    this.updateSize();
+    if (this.props.measureOn === 'hover') {
+      this.updateSize();
+    }
   }
 
   updateSize() {

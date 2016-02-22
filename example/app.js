@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import EventEmitter from 'eventemitter2';
 import CropView from '../src/index';
 import Tree from './tree';
 
@@ -15,6 +16,7 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = { show: false };
+    this.event = new EventEmitter();
   }
 
   handleToggle() {
@@ -28,23 +30,23 @@ export default class App extends Component {
         <h1>react-cropview</h1>
 
         <h2>Large image</h2>
-        <CropView name="cv1" width={400} height={200}>
-          <img src="/large.png" alt="large" />
+        <CropView name="cv1" width={400} height={200} measureOn={this.event}>
+          <img src="/large.png" alt="large" onLoad={e => this.event.emit('cv1.update')} />
         </CropView>
 
         <h2>Small image</h2>
-        <CropView name="cv2" width={400} height={200}>
-          <img src="/small.png" alt="small" />
+        <CropView name="cv2" width={400} height={200} measureOn={this.event}>
+          <img src="/small.png" alt="small" onLoad={e => this.event.emit('cv2.update')} />
         </CropView>
 
         <h2>Vertical image</h2>
-        <CropView name="cv3" width={400} height={200}>
-          <img src="/vert.png" alt="vertical" />
+        <CropView name="cv3" width={400} height={200} measureOn={this.event}>
+          <img src="/vert.png" alt="vertical" onLoad={e => this.event.emit('cv3.update')} />
         </CropView>
 
         <h2>Horizontal image</h2>
-        <CropView name="cv4" width={400} height={200}>
-          <img src="/hori.png" alt="horizontal" />
+        <CropView name="cv4" width={400} height={200} measureOn={this.event}>
+          <img src="/hori.png" alt="horizontal" onLoad={e => this.event.emit('cv4.update')} />
         </CropView>
 
         <h2>SVG</h2>
