@@ -69,31 +69,26 @@ export default class CropView extends Component {
   }
 
   render() {
-    const { connectDropTarget, width, height } = this.props;
+    const { connectDropTarget, width, height, name } = this.props;
     const { offset } = this.state;
     const style = {
       position: 'relative',
       width: `${width}px`,
       height: `${height}px`,
       overflow: 'hidden',
-      cursor: 'all-scroll',
+      cursor: 'move',
     };
 
     // TODO: Make sure 'children' has a single element.
 
     return connectDropTarget(
-      <div>
-        <div style={style}>
-          <Preview ref={::this.savePreview} base={offset} crop={{ width, height }}>
-            {this.props.children}
-          </Preview>
-          <Content offset={offset} onEndDrag={::this.handleEndDrag}>
-            {this.props.children}
-          </Content>
-        </div>
-        <p>
-          offset: {`x: ${offset && offset.x}, y: ${offset && offset.y}`}
-        </p>
+      <div style={style}>
+        <Preview name={name} ref={::this.savePreview} base={offset} crop={{ width, height }}>
+          {this.props.children}
+        </Preview>
+        <Content offset={offset} onEndDrag={::this.handleEndDrag}>
+          {this.props.children}
+        </Content>
       </div>
     );
   }

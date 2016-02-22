@@ -44,7 +44,7 @@ export default class Preview extends Component {
 
   render() {
     const {
-      diff, isDragging, children
+      name, diff, isDragging, children
     } = this.props;
 
     let preview;
@@ -64,6 +64,7 @@ export default class Preview extends Component {
     let debug;
     if (debug) {
       debug = <div style={{ position: 'absolute', left: 0, top: 0, zIndex: 3 }}>
+        name: {name || 'Unknown'}<br />
         dragging: {isDragging ? 'YES' : 'NO'}<br />
         diff: {`x: ${diff && diff.x}, y: ${diff && diff.y}`}
       </div>;
