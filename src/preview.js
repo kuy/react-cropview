@@ -47,26 +47,25 @@ export default class Preview extends Component {
       name, diff, isDragging, children
     } = this.props;
 
-    let preview;
-    if (isDragging) {
-      const offset = this.calcOffset();
-      const style = {
-        position: 'absolute',
-        left: `${offset.x}px`,
-        top: `${offset.y}px`,
-        zIndex: 2,
-      };
-      preview = <div ref="preview" style={style}>
-        {children}
-      </div>;
-    }
+    const offset = this.calcOffset();
+    const style = {
+      position: 'absolute',
+      opacity: isDragging ? 1 : 0,
+      left: `${offset.x}px`,
+      top: `${offset.y}px`,
+      zIndex: 2,
+    };
+    const preview = <div ref="preview" style={style}>
+      {children}
+    </div>;
 
     let debug;
     if (debug) {
       debug = <div style={{ position: 'absolute', left: 0, top: 0, zIndex: 3 }}>
         name: {name || 'Unknown'}<br />
         dragging: {isDragging ? 'YES' : 'NO'}<br />
-        diff: {`x: ${diff && diff.x}, y: ${diff && diff.y}`}
+        diff: {`x: ${diff && diff.x}, y: ${diff && diff.y}`}<br />
+        size: {`width: ${this.size && this.size.width}, height: ${this.size && this.size.height}`}
       </div>;
     }
 
