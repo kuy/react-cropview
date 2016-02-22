@@ -4,8 +4,6 @@ import Sizer from './sizer';
 import DATA from './data';
 
 const NODE_SIZE = [30, 100];
-const WIDTH = 300;
-const HEIGHT = 300;
 
 export default class Tree extends Component {
   static displayName = 'Tree';
