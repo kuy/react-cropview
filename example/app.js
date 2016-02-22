@@ -11,18 +11,37 @@ function select(state) {
 @connect(select)
 export default class App extends Component {
   static displayName = 'App';
+
+  constructor(props) {
+    super(props);
+    this.state = { show: false };
+  }
+
+  handleToggle() {
+    this.setState({ show: !this.state.show });
+  }
+
   render() {
+    const { show } = this.state;
     return (
       <div>
         <h1>react-cropview</h1>
 
+        <h2>Image</h2>
         <CropView name="cv1" width={400} height={200}>
           <img src="/placeholder.png" alt="placeholder" />
         </CropView>
 
+        <h2>SVG</h2>
         <CropView name="cv2" width={400} height={200}>
           <Tree />
         </CropView>
+
+        <h2>Lazy SVG</h2>
+        <CropView name="cv3" width={400} height={200}>
+          <Tree show={show} />
+        </CropView>
+        <button onClick={::this.handleToggle}>{show ? 'Hide' : 'Show'}</button>
       </div>
     );
   }
