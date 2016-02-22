@@ -37,13 +37,23 @@ export default class App extends Component {
           <img src="/small.png" alt="small" />
         </CropView>
 
-        <h2>SVG</h2>
+        <h2>Vertical image</h2>
         <CropView name="cv3" width={400} height={200}>
+          <img src="/vert.png" alt="vertical" />
+        </CropView>
+
+        <h2>Horizontal image</h2>
+        <CropView name="cv4" width={400} height={200}>
+          <img src="/hori.png" alt="horizontal" />
+        </CropView>
+
+        <h2>SVG</h2>
+        <CropView name="cv5" width={400} height={200}>
           <Tree />
         </CropView>
 
         <h2>Lazy SVG</h2>
-        <CropView name="cv4" width={400} height={200}>
+        <CropView name="cv6" width={400} height={200}>
           <Tree show={show} />
         </CropView>
         <button onClick={::this.handleToggle}>{show ? 'Hide' : 'Show'}</button>
