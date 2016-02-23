@@ -15,7 +15,7 @@ npm install --save react-cropview
 
 ## Example
 
-Please check out [examples](https://github.com/kuy/react-cropview/tree/master/example) directory.
+Please check out [example](https://github.com/kuy/react-cropview/tree/master/example) directory.
 
 ## Usage
 
