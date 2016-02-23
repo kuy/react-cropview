@@ -6,10 +6,6 @@ import Preview from './preview';
 import { CONTENT } from './types';
 import { amend, getSize } from './utils';
 
-function maybeEventEmitter(o) {
-  return typeof o === 'object' && o.on && o.removeListener;
-}
-
 const boxTarget = {
   drop(props, monitor, component) {
     const CropViewClass = CropView.DecoratedComponent.DecoratedComponent;
@@ -35,10 +31,7 @@ export default class CropView extends Component {
     ]),
     constraint: PropTypes.bool,
     centering: PropTypes.bool,
-    measureOn: PropTypes.oneOfType([
-      PropTypes.oneOf(['hover', 'mount']),
-      PropTypes.object, // EventEmitter2
-    ]),
+    measureOn: PropTypes.oneOf(['hover', 'mount']),
     children: PropTypes.any.isRequired,
     debug: PropTypes.bool,
 
@@ -58,21 +51,6 @@ export default class CropView extends Component {
       offset: { x: 0, y: 0 },
       size: null,
     };
-
-    this.handleEmitter = this.handleEmitter.bind(this);
-
-    const { name, measureOn } = props;
-    if (maybeEventEmitter(measureOn)) {
-      if (typeof name !== 'string') {
-        console.error("'name' prop is required if you pass EventEmitter2 as 'measureOn' prop");
-        throw new Error('name is required');
-      }
-      measureOn.on(`${name}.update`, this.handleEmitter);
-    }
-  }
-
-  handleEmitter() {
-    this.updateSize();
   }
 
   savePreview(ref) {
@@ -104,13 +82,6 @@ export default class CropView extends Component {
   componentDidMount() {
     if (this.props.measureOn === 'mount') {
       this.updateSize();
-    }
-  }
-
-  componentWillUnmount() {
-    const { measureOn } = this.props;
-    if (maybeEventEmitter(measureOn)) {
-      measureOn.removeListener(`${name}.update`, this.handleEmitter);
     }
   }
 
@@ -177,12 +148,13 @@ export default class CropView extends Component {
       </div>
     </div>;
 
+    const inherit = { name, debug, offset };
     return connectDropTarget(
       <div style={style} onMouseEnter={::this.handleMouseEnter}>
-        <Preview name={name} ref={::this.savePreview} base={offset} crop={{ width, height }} debug={debug}>
+        <Preview {...inherit} ref={::this.savePreview} crop={{ width, height }}>
           {content}
         </Preview>
-        <Content offset={offset} onEndDrag={::this.handleEndDrag}>
+        <Content {...inherit} onEndDrag={::this.handleEndDrag}>
           {content}
         </Content>
       </div>

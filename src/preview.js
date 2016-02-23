@@ -25,17 +25,14 @@ export default class Preview extends Component {
   static displayName = 'Preview';
   static propTypes = {
     name: PropTypes.string,
-    base: PropTypes.object,
+    offset: PropTypes.object.isRequired,
     crop: PropTypes.object.isRequired,
     children: PropTypes.any.isRequired,
-    debug: PropTypes.bool,
+    debug: PropTypes.bool.isRequired,
 
     // Props from DragLayer
     diff: PropTypes.object.isRequired,
     isDragging: PropTypes.bool.isRequired,
-  };
-  static defaultProps = {
-    debug: false,
   };
 
   componentDidUpdate() {
@@ -45,7 +42,7 @@ export default class Preview extends Component {
   }
 
   calcOffset() {
-    const { base, diff, crop } = this.props;
+    const { offset: base, diff, crop } = this.props;
     if (!crop || !this.size) {
       return { x: 0, y: 0 };
     }

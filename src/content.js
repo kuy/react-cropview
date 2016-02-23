@@ -4,32 +4,34 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import { CONTENT } from './types';
 
 const boxSource = {
-  beginDrag(props, monitor, component) {
+  beginDrag() {
     return {};
   },
-  endDrag(props, monitor, component) {
-    const { onEndDrag } = props;
-    onEndDrag();
+  endDrag(props) {
+    props.onEndDrag();
   }
 };
 
 @DragSource(CONTENT, boxSource, (connect, monitor) => {
   return {
+    isDragging: monitor.isDragging(),
     connectDragSource: connect.dragSource(),
     connectDragPreview: connect.dragPreview(),
-    isDragging: monitor.isDragging(),
   };
 })
 export default class Content extends Component {
   static displayName = 'Content';
   static propTypes = {
-    offset: PropTypes.object,
+    name: PropTypes.string,
+    offset: PropTypes.object.isRequired,
+    onEndDrag: PropTypes.func.isRequired,
     children: PropTypes.any.isRequired,
+    debug: PropTypes.bool.isRequired,
+
+    // Props from DragSource
+    isDragging: PropTypes.bool.isRequired,
     connectDragSource: PropTypes.func.isRequired,
     connectDragPreview: PropTypes.func.isRequired,
-  };
-  static defaultProps = {
-    offset: { x: 0, y: 0 },
   };
 
   componentDidMount() {
