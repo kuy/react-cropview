@@ -40,12 +40,16 @@ export default class CropView extends Component {
       PropTypes.object, // EventEmitter2
     ]),
     children: PropTypes.any.isRequired,
+    debug: PropTypes.bool,
+
+    // Props from DropTarget
     connectDropTarget: PropTypes.func.isRequired,
   };
   static defaultProps = {
     constraint: true,
     centering: true,
     measureOn: 'mount',
+    debug: false,
   };
 
   constructor(props) {
@@ -132,7 +136,7 @@ export default class CropView extends Component {
   }
 
   render() {
-    const { connectDropTarget, width, height, name, centering } = this.props;
+    const { connectDropTarget, width, height, name, centering, debug } = this.props;
     const { offset, size } = this.state;
     const style = {
       position: 'relative',
@@ -175,7 +179,7 @@ export default class CropView extends Component {
 
     return connectDropTarget(
       <div style={style} onMouseEnter={::this.handleMouseEnter}>
-        <Preview name={name} ref={::this.savePreview} base={offset} crop={{ width, height }}>
+        <Preview name={name} ref={::this.savePreview} base={offset} crop={{ width, height }} debug={debug}>
           {content}
         </Preview>
         <Content offset={offset} onEndDrag={::this.handleEndDrag}>

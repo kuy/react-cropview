@@ -39,8 +39,8 @@ export default class App extends Component {
           <img src="/small.png" alt="small" onLoad={e => this.event.emit('cv2.update')} />
         </CropView>
 
-        <h2>Vertical image</h2>
-        <CropView name="cv3" width={400} height={200} measureOn={this.event}>
+        <h2>Vertical image (with debug mode)</h2>
+        <CropView name="cv3" width={400} height={200} measureOn={this.event} debug={true}>
           <img src="/vert.png" alt="vertical" onLoad={e => this.event.emit('cv3.update')} />
         </CropView>
 

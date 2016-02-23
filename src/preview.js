@@ -23,6 +23,20 @@ function calcDiff(initial, current) {
 })
 export default class Preview extends Component {
   static displayName = 'Preview';
+  static propTypes = {
+    name: PropTypes.string,
+    base: PropTypes.object,
+    crop: PropTypes.object.isRequired,
+    children: PropTypes.any.isRequired,
+    debug: PropTypes.bool,
+
+    // Props from DragLayer
+    diff: PropTypes.object.isRequired,
+    isDragging: PropTypes.bool.isRequired,
+  };
+  static defaultProps = {
+    debug: false,
+  };
 
   componentDidUpdate() {
     if (this.refs.preview) {
@@ -44,7 +58,7 @@ export default class Preview extends Component {
 
   render() {
     const {
-      name, diff, isDragging, children
+      name, diff, isDragging, children, debug
     } = this.props;
 
     const offset = this.calcOffset();
@@ -59,19 +73,19 @@ export default class Preview extends Component {
       {children}
     </div>;
 
-    let debug;
+    let info;
     if (debug) {
-      debug = <div style={{ position: 'absolute', left: 0, top: 0, zIndex: 3 }}>
-        name: {name || 'Unknown'}<br />
+      info = <div style={{ position: 'absolute', left: 0, top: 0, zIndex: 3 }}>
+        name: {name || '?'}<br />
         dragging: {isDragging ? 'YES' : 'NO'}<br />
         diff: {`x: ${diff && diff.x}, y: ${diff && diff.y}`}<br />
-        size: {`width: ${this.size && this.size.width}, height: ${this.size && this.size.height}`}
+        size: {`${this.size && this.size.width}x${this.size && this.size.height}`}
       </div>;
     }
 
     return (
       <div style={{ position: 'relative', pointerEvents: 'none' }}>
-        {debug}
+        {info}
         {preview}
       </div>
     );
